@@ -10,6 +10,7 @@ public class LoginPage {
     private final By textFieldUsername = By.id("user-name");
     private final By textFieldPassword = By.id("password");
     private final By buttonLogin = By.id("login-button");
+    private final By errorLabel = By.cssSelector("h3[data-test='error']");
 
     public LoginPage(WebDriver driver) {
         this.driver = driver;
@@ -20,6 +21,10 @@ public class LoginPage {
         guiActions.sendTextTo(textFieldUsername, username);
         guiActions.sendTextTo(textFieldPassword, password);
         return new LoginPage(driver);
+    }
+
+    public String getErrorMessage() {
+        return guiActions.getTextFrom(errorLabel);
     }
 
     public InventoryPage login() {

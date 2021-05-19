@@ -18,12 +18,13 @@ public class BaseTests {
 
     @BeforeMethod
     public void setUp() {
+        driver.manage().deleteAllCookies();
         driver.get("https://www.saucedemo.com/");
     }
 
     @AfterClass
     public void classTearDown() {
-        driver.quit();
+//        driver.quit();
     }
 
     public WebDriver getDriver() {

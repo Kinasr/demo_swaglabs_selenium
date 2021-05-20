@@ -38,4 +38,8 @@ public class InventoryPage {
     public int getNumOfItemsOnCart() {
         return Integer.parseInt(guiActions.getTextFrom(shoppingCartBadge));
     }
+
+    public boolean isCartEmpty() {
+        return guiActions.ensureElementDoesNotExist(shoppingCartBadge);
+    }
 }

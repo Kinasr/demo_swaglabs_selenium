@@ -7,6 +7,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import utilities.MyLogger;
 
+import java.util.List;
+
 public class GUIActions {
     private final WebDriver driver;
     private final WebDriverWait wait;
@@ -43,6 +45,12 @@ public class GUIActions {
         wait.until(ExpectedConditions.visibilityOf(element));
         logEvents(by, LogEvent.GETTING_TEXT);
         return element.getText();
+    }
+
+    public boolean ensureElementDoesNotExist(By by) {
+        logEvents(by, LogEvent.GETTING_ELEMENT);
+        List<WebElement> elements = driver.findElements(by);
+        return elements.isEmpty();
     }
 
     private void logEvents(By by, LogEvent logEvent) {

@@ -1,5 +1,6 @@
 package base;
 
+import helpers.PropertiesReader;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -19,7 +20,9 @@ public class BaseTests {
 
     @BeforeMethod
     public void minorSetUp() {
-        driver.get("https://www.saucedemo.com/");
+        var url = new PropertiesReader("test-configurations.properties")
+                .getProperty("base-url");
+        driver.get(url);
     }
 
     @AfterMethod

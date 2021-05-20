@@ -3,7 +3,6 @@ package tests;
 import org.testng.annotations.Test;
 import base.BaseTests;
 import pages.LoginPage;
-import utilities.MyLogger;
 
 import static org.testng.Assert.assertEquals;
 

@@ -11,11 +11,10 @@ import java.io.IOException;
 public class ReadFromExcel {
     public static Object[][] readDataFromExelSheet(String fileName, String sheetName) {
         Object[][] data;
-        Workbook workbook;
-        try (
-                FileInputStream inputStream = new FileInputStream(
-                "src\\main\\resources\\"+ fileName +".xlsx")) {
-            workbook = new XSSFWorkbook(inputStream);
+        try (FileInputStream inputStream = new FileInputStream(
+                "src\\test\\resources\\" + fileName + ".xlsx");
+        Workbook workbook = new XSSFWorkbook(inputStream)) {
+
             Sheet sheet = workbook.getSheet(sheetName);
 
             var numOfRows = sheet.getPhysicalNumberOfRows();

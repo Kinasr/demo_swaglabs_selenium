@@ -20,7 +20,7 @@ public class BaseTests {
 
     @BeforeMethod
     public void minorSetUp() {
-        var url = new PropertiesReader("test-configurations.properties")
+        var url = new PropertiesReader("test-configurations")
                 .getProperty("base-url");
         driver.get(url);
     }

@@ -15,17 +15,19 @@ public class ExcelReader {
 
     /**
      * Initialize and object form ExcelManager class, and setting the data for sheet, rowSize, and columnSize.
-     * @param fileName The name of the Excel file.
+     *
+     * @param fileName  The name of the Excel file.
      * @param sheetName The name of the Sheet.
      */
     public ExcelReader(String fileName, String sheetName) {
-        sheet = new ExcelManager(fileName, sheetName).getSheet();
+        sheet = ExcelManager.getInstance(fileName, sheetName).getSheet();
         rowSize = sheet.getPhysicalNumberOfRows();
         columnSize = sheet.getRow(0).getLastCellNum();
     }
 
     /**
      * Using the Sheet object to load data in 2D Object.
+     *
      * @return All data exists in the Excel sheet as 2D Object.
      */
     public Object[][] getData() {
@@ -43,6 +45,7 @@ public class ExcelReader {
     /**
      * Using the sheet object to loads data for a row as Map of String key "the headers of the columns in
      * the Excel sheet" and Object value.
+     *
      * @param rowIndex The index of the wanted row.
      * @return A Map with that row "headers as key and data as value".
      */
@@ -61,6 +64,7 @@ public class ExcelReader {
 
     /**
      * A wrapper method of gerRow method to provide only the first row.
+     *
      * @return The data that exist in the first row in the sheet as a Map of headers as key and data as value.
      */
     public Map<String, Object> getFirstRow() {
@@ -69,6 +73,7 @@ public class ExcelReader {
 
     /**
      * A wrapper method of gerRow method to provide a random row.
+     *
      * @return The data that exist in a random row in the sheet as a Map of headers as key and data as value.
      */
     public Map<String, Object> getRandomRow() {
@@ -76,16 +81,18 @@ public class ExcelReader {
     }
 
     /**
-     * Generates a random number and ensure that this number is not generated before.
+     * Generates a random number and ensure that this number is Unique.
      * if the all available number has been generated before the counter will be reset.
+     *
      * @return A random number from 1 to rowSize - 1
      */
     private int generateRandomIndex() {
         var limit = rowSize - 1;
         var randomIndex = new Random().nextInt(limit) + 1;
+
         var isAdded = generatedIndexes.add(randomIndex);
 
-        if (isAdded){
+        if (isAdded) {
             return randomIndex;
         } else {
             if (generatedIndexes.size() == limit) {

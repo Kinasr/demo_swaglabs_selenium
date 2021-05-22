@@ -4,7 +4,7 @@ import helpers.GUIActions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
-public class InventoryPage {
+public class InventoryPage extends BurgerMenu {
     private final WebDriver driver;
     private final GUIActions guiActions;
     private final By pageTitle = By.className("title");
@@ -13,6 +13,7 @@ public class InventoryPage {
     private final String removeItemButtonId = "remove-";
 
     public InventoryPage(WebDriver driver) {
+        super(driver);
         this.driver = driver;
         guiActions = new GUIActions(driver);
     }

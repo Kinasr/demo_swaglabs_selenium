@@ -1,16 +1,21 @@
 package utilities;
 
+import helpers.ExcelReader;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * A Class loads a Excel sheet and providing this sheet.
  */
 public class ExcelManager {
+    private static ExcelManager instance = null;
+    private static final Set<String> loadedSheets = new HashSet<>();
     private final String fileName;
     private final String sheetName;
     private Sheet sheet;
@@ -20,10 +25,25 @@ public class ExcelManager {
      * @param fileName The name of the Excel file.
      * @param sheetName The name of the Sheet.
      */
-    public ExcelManager(String fileName, String sheetName) {
+    private ExcelManager(String fileName, String sheetName) {
         this.fileName = fileName;
         this.sheetName = sheetName;
         loadExcelSheet();
+    }
+
+    /**
+     * Ensure that this class will have only one instance per sheet.
+     * @param fileName The name of the Excel file.
+     * @param sheetName The name of the Sheet.
+     * @return If the instance != null && this sheet is already loaded return the created instance,
+     * otherwise create new instance.
+     */
+    public static ExcelManager getInstance(String fileName, String sheetName) {
+        if (instance == null || !loadedSheets.contains(fileName + sheetName)) {
+            loadedSheets.add(fileName + sheetName);
+            instance = new ExcelManager(fileName, sheetName);
+        }
+        return instance;
     }
 
     /**

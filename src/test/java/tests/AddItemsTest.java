@@ -1,13 +1,27 @@
 package tests;
 
 import base.BaseTests;
+import helpers.ExcelReader;
 import org.testng.annotations.*;
 import pages.LoginPage;
+
+import java.util.Map;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 public class AddItemsTest extends BaseTests {
+    private String username;
+    private String password;
+
+    @BeforeClass
+    public void localClassSetUp() {
+        var userCredentials =
+                new ExcelReader("user-credentials", "valid credentials").getFirstRow();
+        username = userCredentials.get("username").toString();
+        password = userCredentials.get("password").toString();
+    }
+
     /**
      * Override the before class in the base to become before method.
      * Calling minorSetUp to open the site, and to ensure that we use the same driver instance.
@@ -39,7 +53,7 @@ public class AddItemsTest extends BaseTests {
     @Test
     public void addItemToCart() {
         var numOfItemsOnCart = new LoginPage(getDriver())
-                .enterUserCredentials("standard_user", "secret_sauce")
+                .enterUserCredentials(username, password)
                 .login()
                 .addItemToCart("Sauce Labs Backpack")
                 .getNumOfItemsOnCart();
@@ -49,7 +63,7 @@ public class AddItemsTest extends BaseTests {
     @Test
     public void addTowItemsToCart() {
         var numOfItemsOnCart = new LoginPage(getDriver())
-                .enterUserCredentials("standard_user", "secret_sauce")
+                .enterUserCredentials(username, password)
                 .login()
                 .addItemToCart("Sauce Labs Backpack")
                 .addItemToCart("Sauce Labs Bike Light")
@@ -60,7 +74,7 @@ public class AddItemsTest extends BaseTests {
     @Test
     public void addOneItemToCartThenRemoveIt() {
         var cartStatus = new LoginPage(getDriver())
-                .enterUserCredentials("standard_user", "secret_sauce")
+                .enterUserCredentials(username, password)
                 .login()
                 .addItemToCart("Sauce Labs Backpack")
                 .removeItemFormCart("Sauce Labs Backpack")

@@ -8,19 +8,19 @@ import utilities.MyLogger;
 import java.util.*;
 
 public class ExcelReader {
+    private static final String rootPath = "src/test/resources/";
     private final Sheet sheet;
     private final int rowSize;
     private final int columnSize;
     private final Set<Integer> generatedIndexes = new HashSet<>();
 
     /**
-     * Initialize and object form ExcelManager class, and setting the data for sheet, rowSize, and columnSize.
-     *
+     * Initialize an instance form ExcelManager class, and setting the data for sheet, rowSize, and columnSize.
      * @param fileName  The name of the Excel file.
      * @param sheetName The name of the Sheet.
      */
     public ExcelReader(String fileName, String sheetName) {
-        sheet = ExcelManager.getInstance(fileName, sheetName).getSheet();
+        sheet = ExcelManager.getInstance(rootPath + fileName, sheetName).getSheet();
         rowSize = sheet.getPhysicalNumberOfRows();
         columnSize = sheet.getRow(0).getLastCellNum();
     }

@@ -1,9 +1,8 @@
 package base;
 
 import helpers.PropertiesReader;
-import io.github.bonigarcia.wdm.WebDriverManager;
+import helpers.WebDriverFactory;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
@@ -14,8 +13,7 @@ public class BaseTests {
 
     @BeforeClass
     public void majorSetUp() {
-        WebDriverManager.chromedriver().setup();
-        driver = new ChromeDriver();
+        driver = WebDriverFactory.getDriver();
     }
 
     @BeforeMethod

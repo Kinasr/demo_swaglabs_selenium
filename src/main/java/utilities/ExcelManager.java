@@ -1,6 +1,5 @@
 package utilities;
 
-import helpers.ExcelReader;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -16,32 +15,32 @@ import java.util.Set;
 public class ExcelManager {
     private static ExcelManager instance = null;
     private static final Set<String> loadedSheets = new HashSet<>();
-    private final String fileName;
+    private final String filePath;
     private final String sheetName;
     private Sheet sheet;
 
     /**
      * Set the file name and sheet name values.
-     * @param fileName The name of the Excel file.
+     * @param filePath The path of the Excel file with the file name.
      * @param sheetName The name of the Sheet.
      */
-    private ExcelManager(String fileName, String sheetName) {
-        this.fileName = fileName;
+    private ExcelManager(String filePath, String sheetName) {
+        this.filePath = filePath;
         this.sheetName = sheetName;
         loadExcelSheet();
     }
 
     /**
      * Ensure that this class will have only one instance per sheet.
-     * @param fileName The name of the Excel file.
+     * @param filePath The name of the Excel file.
      * @param sheetName The name of the Sheet.
      * @return If the instance != null && this sheet is already loaded return the created instance,
      * otherwise create new instance.
      */
-    public static ExcelManager getInstance(String fileName, String sheetName) {
-        if (instance == null || !loadedSheets.contains(fileName + sheetName)) {
-            loadedSheets.add(fileName + sheetName);
-            instance = new ExcelManager(fileName, sheetName);
+    public static ExcelManager getInstance(String filePath, String sheetName) {
+        if (instance == null || !loadedSheets.contains(filePath + sheetName)) {
+            loadedSheets.add(filePath + sheetName);
+            instance = new ExcelManager(filePath, sheetName);
         }
         return instance;
     }
@@ -52,12 +51,12 @@ public class ExcelManager {
      */
     private void loadExcelSheet() {
         try (FileInputStream inputStream = new FileInputStream(
-                "src\\test\\resources\\" + fileName + ".xlsx");
+                filePath + ".xlsx");
              Workbook workbook = new XSSFWorkbook(inputStream)) {
 
             sheet = workbook.getSheet(sheetName);
         } catch (IOException e) {
-            MyLogger.severe(ExcelManager.class.getSimpleName(), "Can't read data from: "+ fileName
+            MyLogger.severe(ExcelManager.class.getSimpleName(), "Can't read data from: "+ filePath
                     +" sheet: "+ sheetName);
             e.printStackTrace();
         }

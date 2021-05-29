@@ -17,13 +17,13 @@ public class AddItemsTest extends BaseTests {
 
     @BeforeClass
     public void localClassSetUp() {
-        PropertiesReader propReader = new PropertiesReader("columns-headers");
+        PropertiesReader columnsHeaderReader = new PropertiesReader("columns-headers");
         var userCredentials =
                 new ExcelReader("user-credentials", "valid credentials").getFirstRow();
-        username = userCredentials.get(propReader.getProperty("username-header")).toString();
-        password = userCredentials.get(propReader.getProperty("password-header")).toString();
+        username = userCredentials.get(columnsHeaderReader.getProperty("username")).toString();
+        password = userCredentials.get(columnsHeaderReader.getProperty("password")).toString();
 
-        itemName = propReader.getProperty("item-header");
+        itemName = columnsHeaderReader.getProperty("item");
     }
 
     /**

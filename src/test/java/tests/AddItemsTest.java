@@ -12,8 +12,8 @@ import static org.testng.Assert.assertTrue;
 public class AddItemsTest extends BaseTests {
     private String username;
     private String password;
-    private ExcelReader itemReader;
     private String itemName;
+    private ExcelReader itemReader;
 
     @BeforeClass
     public void localClassSetUp() {

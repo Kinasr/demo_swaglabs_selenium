@@ -1,5 +1,8 @@
 package helpers;
 
+import io.qameta.allure.Allure;
+import io.qameta.allure.model.Status;
+import io.qameta.allure.model.StepResult;
 import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.WebDriver;
@@ -31,12 +34,16 @@ public class SeleniumEventListener implements WebDriverEventListener {
 
     @Override
     public void beforeNavigateTo(String s, WebDriver webDriver) {
-        MyLogger.info(this.getClass().getSimpleName(), "Navigating to " + s);
+        var msg = "Navigating to " + s;
+        MyLogger.info(this.getClass().getSimpleName(), msg);
+        Allure.getLifecycle().startStep(s, new StepResult().setName(msg).setStatus(Status.FAILED));
     }
 
     @Override
     public void afterNavigateTo(String s, WebDriver webDriver) {
         MyLogger.info(this.getClass().getSimpleName(), "Navigated to "+ s +" successfully");
+        Allure.getLifecycle().updateStep(s, step -> step.setStatus(Status.PASSED));
+        Allure.getLifecycle().stopStep(s);
     }
 
     @Override
@@ -71,33 +78,45 @@ public class SeleniumEventListener implements WebDriverEventListener {
 
     @Override
     public void beforeFindBy(By by, WebElement webElement, WebDriver webDriver) {
-        MyLogger.info(this.getClass().getSimpleName(), "Finding element [" + by + "]");
+        var msg = "Finding element [" + by + "]";
+        MyLogger.info(this.getClass().getSimpleName(), msg);
+        Allure.getLifecycle().startStep(by.toString(), new StepResult().setName(msg).setStatus(Status.FAILED));
     }
 
     @Override
     public void afterFindBy(By by, WebElement webElement, WebDriver webDriver) {
         MyLogger.info(this.getClass().getSimpleName(), "Successfully found element [" + by + "]");
+        Allure.getLifecycle().updateStep(by.toString(), step -> step.setStatus(Status.PASSED));
+        Allure.getLifecycle().stopStep(by.toString());
     }
 
     @Override
     public void beforeClickOn(WebElement webElement, WebDriver webDriver) {
-        MyLogger.info(this.getClass().getSimpleName(), "Clicking on element [" + webElement + "]");
+        var msg = "Clicking on element [" + webElement + "]";
+        MyLogger.info(this.getClass().getSimpleName(), msg);
+        Allure.getLifecycle().startStep(webElement.toString(), new StepResult().setName(msg).setStatus(Status.FAILED));
     }
 
     @Override
     public void afterClickOn(WebElement webElement, WebDriver webDriver) {
         MyLogger.info(this.getClass().getSimpleName(), "Successfully clicked on element [" + webElement + "]");
+        Allure.getLifecycle().updateStep(webElement.toString(), step -> step.setStatus(Status.PASSED));
+        Allure.getLifecycle().stopStep(webElement.toString());
     }
 
     @Override
     public void beforeChangeValueOf(WebElement webElement, WebDriver webDriver, CharSequence[] charSequences) {
-        MyLogger.info(this.getClass().getSimpleName(), "Changing value of element [" + webElement + "]");
+        var msg = "Changing value of element [" + webElement + "]";
+        MyLogger.info(this.getClass().getSimpleName(), msg);
+        Allure.getLifecycle().startStep(webElement.toString(), new StepResult().setName(msg).setStatus(Status.FAILED));
     }
 
     @Override
     public void afterChangeValueOf(WebElement webElement, WebDriver webDriver, CharSequence[] charSequences) {
         MyLogger.info(this.getClass().getSimpleName(),
                 "Successfully changed the value of element [" + webElement + "]");
+        Allure.getLifecycle().updateStep(webElement.toString(), step -> step.setStatus(Status.PASSED));
+        Allure.getLifecycle().stopStep(webElement.toString());
     }
 
     @Override
@@ -137,12 +156,16 @@ public class SeleniumEventListener implements WebDriverEventListener {
 
     @Override
     public void beforeGetText(WebElement webElement, WebDriver webDriver) {
-        MyLogger.info(this.getClass().getSimpleName(), "Getting text of element [" + webElement + "]");
+        var msg = "Getting text of element [" + webElement + "]";
+        MyLogger.info(this.getClass().getSimpleName(), msg);
+        Allure.getLifecycle().startStep(webElement.toString(), new StepResult().setName(msg).setStatus(Status.FAILED));
     }
 
     @Override
     public void afterGetText(WebElement webElement, WebDriver webDriver, String s) {
         MyLogger.info(this.getClass().getSimpleName(),
                 "Successfully got the text of the element [" + webElement + "]");
+        Allure.getLifecycle().updateStep(webElement.toString(), step -> step.setStatus(Status.PASSED));
+        Allure.getLifecycle().stopStep(webElement.toString());
     }
 }

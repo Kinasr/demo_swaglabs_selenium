@@ -22,15 +22,21 @@ public class WebDriverFactory {
      * @return Chrome webDriver or Firefox webDriver or null if no valid browser in the config file.
      */
     public static WebDriver getDriver() {
-        browserProps = new PropertiesReader("browser-config");
-        String browser = browserProps.getProperty("browser");
+        if (driver == null) {
+            browserProps = new PropertiesReader("browser-config");
+            String browser = browserProps.getProperty("browser");
 
-        if (browser.equals("Chrome")) driver = getChromeDriver();
-        else if (browser.equals("Firefox")) driver = getFirefoxDriver();
-        else MyLogger.severe(WebDriverFactory.class.getSimpleName(),
-                    "No Valid browser name in browser-config file");
-
+            if (browser.equals("Chrome")) driver = getChromeDriver();
+            else if (browser.equals("Firefox")) driver = getFirefoxDriver();
+            else MyLogger.severe(WebDriverFactory.class.getSimpleName(),
+                        "No Valid browser name in browser-config file");
+        }
         return driver;
+    }
+
+    public static void quit() {
+        driver.quit();
+        driver = null;
     }
 
     /**

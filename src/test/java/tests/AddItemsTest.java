@@ -3,12 +3,14 @@ package tests;
 import base.BaseTests;
 import helpers.ExcelReader;
 import helpers.PropertiesReader;
+import helpers.TestngListener;
 import org.testng.annotations.*;
 import pages.LoginPage;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
+@Listeners(TestngListener.class)
 public class AddItemsTest extends BaseTests {
     private String username;
     private String password;

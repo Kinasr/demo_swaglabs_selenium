@@ -1,11 +1,14 @@
 package tests;
 
+import helpers.TestngListener;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 import base.BaseTests;
 import pages.LoginPage;
 
 import static org.testng.Assert.assertEquals;
 
+@Listeners(TestngListener.class)
 public class LoginTests extends BaseTests{
 
     @Test(dataProvider = "valid-user-credentials", dataProviderClass = data_providers.DataProviders.class)

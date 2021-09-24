@@ -8,7 +8,6 @@ import utilities.MyLogger;
 import java.util.*;
 
 public class ExcelReader {
-    private static final String rootPath = "src/test/resources/";
     private final Sheet sheet;
     private final int rowSize;
     private final int columnSize;
@@ -20,7 +19,7 @@ public class ExcelReader {
      * @param sheetName The name of the Sheet.
      */
     public ExcelReader(String fileName, String sheetName) {
-        sheet = ExcelManager.getInstance(rootPath + fileName, sheetName).getSheet();
+        sheet = ExcelManager.getInstance(Constants.TEST_RESOURCES_PATH + fileName, sheetName).getSheet();
         rowSize = sheet.getPhysicalNumberOfRows();
         columnSize = sheet.getRow(0).getLastCellNum();
     }

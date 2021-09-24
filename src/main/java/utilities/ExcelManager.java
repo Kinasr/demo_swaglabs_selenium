@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * A Class loads a Excel sheet and providing this sheet.
+ * A Class loads an Excel sheet and providing this sheet.
  */
 public class ExcelManager {
     private static ExcelManager instance = null;

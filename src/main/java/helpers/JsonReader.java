@@ -5,6 +5,8 @@ import org.json.simple.JSONObject;
 import utilities.JsonManager;
 import utilities.MyLogger;
 
+import java.util.regex.Pattern;
+
 /**
  * A helper class to manage reading form JSON files
  */
@@ -46,7 +48,7 @@ public class JsonReader {
      * @param key the key of the JSON value
      * @return the current instance from JsonReader
      */
-    public JsonReader get(String key) {
+    public JsonReader getObject(String key) {
         currentObject = currentObject == null ? getJsonAsObject().get(key)
                 : ((JSONObject) currentObject).get(key);
 
@@ -66,8 +68,35 @@ public class JsonReader {
 
         if (index < arrayObject.size())
             currentObject = arrayObject.get(index);
-        else MyLogger.warning(JsonReader.class.getSimpleName(), "The Index is out of border in "
-                + fileName + ".json file");
+        else {
+            MyLogger.severe(JsonReader.class.getSimpleName(), "The Index is out of border in "
+                    + fileName + ".json file");
+        }
+
+        return this;
+    }
+
+    /**
+     * Decode the JSON using the JSON key series like "key1.key2[index].key3"
+     * @param series the JSON series
+     * @return the current instance from JsonReader
+     */
+    public JsonReader get(String series) {
+        var jsonList = series.split("\\.");
+
+        for (String json : jsonList) {
+            if (json.matches("[a-z-]*\\[\\d+]")){
+                var matcher = Pattern.compile("\\d+").matcher(json);
+
+                json = json.replaceAll("\\[\\d+]", "");
+                this.getObject(json);
+
+                while (matcher.find())
+                    this.getFromArray(Integer.parseInt(matcher.group(0)));
+            } else {
+                this.getObject(json);
+            }
+        }
 
         return this;
     }
@@ -93,5 +122,12 @@ public class JsonReader {
         currentObject = null;
 
         return string;
+    }
+
+    public int toInt() {
+        var number = Integer.parseInt(currentObject.toString());
+        currentObject = null;
+
+        return number;
     }
 }

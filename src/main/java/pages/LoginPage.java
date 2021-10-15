@@ -1,12 +1,14 @@
 package pages;
 
-import helpers.GUIActions;
+import helpers.GuiAction;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class LoginPage {
     private final WebDriver driver;
-    private final GUIActions guiActions;
+    private final GuiAction guiAction;
     private final By textFieldUsername = By.id("user-name");
     private final By textFieldPassword = By.id("password");
     private final By buttonLogin = By.id("login-button");
@@ -14,21 +16,22 @@ public class LoginPage {
 
     public LoginPage(WebDriver driver) {
         this.driver = driver;
-        guiActions = new GUIActions(driver);
+        guiAction = new GuiAction(driver);
     }
 
     public LoginPage enterUserCredentials(String username, String password) {
-        guiActions.sendTextTo(textFieldUsername, username);
-        guiActions.sendTextTo(textFieldPassword, password);
+        guiAction.sendTextTo(textFieldUsername, username);
+        guiAction.sendTextTo(textFieldPassword, password);
         return new LoginPage(driver);
     }
 
-    public String getErrorMessage() {
-        return guiActions.getTextFrom(errorLabel);
+    public InventoryPage login() {
+        guiAction.clickOn(buttonLogin);
+        return new InventoryPage(driver);
     }
 
-    public InventoryPage login() {
-        guiActions.clickOn(buttonLogin);
-        return new InventoryPage(driver);
+    public LoginPage assertOnErrorMessage(String msg) {
+        assertEquals(msg, guiAction.getTextFrom(errorLabel));
+        return this;
     }
 }

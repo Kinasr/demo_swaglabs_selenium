@@ -8,11 +8,11 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
 
-public class GUIActions {
+public class GuiAction {
     private final WebDriver driver;
     private final WebDriverWait wait;
 
-    public GUIActions(WebDriver driver) {
+    public GuiAction(WebDriver driver) {
         this.driver = driver;
         wait = new WebDriverWait(driver, 15);
     }

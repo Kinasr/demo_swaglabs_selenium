@@ -1,12 +1,15 @@
 package pages;
 
-import helpers.GUIActions;
+import helpers.GuiAction;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 public class InventoryPage extends BurgerMenu {
     private final WebDriver driver;
-    private final GUIActions guiActions;
+    private final GuiAction guiAction;
     private final By pageTitle = By.className("title");
     private final By shoppingCartBadge = By.className("shopping_cart_badge");
     private final String addItemButtonId = "add-to-cart-";
@@ -15,32 +18,35 @@ public class InventoryPage extends BurgerMenu {
     public InventoryPage(WebDriver driver) {
         super(driver);
         this.driver = driver;
-        guiActions = new GUIActions(driver);
-    }
-
-    public String getPageTitle() {
-        return guiActions.getTextFrom(pageTitle);
+        guiAction = new GuiAction(driver);
     }
 
     public InventoryPage addItemToCart(String itemName) {
         var formattedItemName = itemName.replaceAll(" ", "-").toLowerCase();
         var addItemButton = By.id(addItemButtonId + formattedItemName);
-        guiActions.clickOn(addItemButton);
-        return new InventoryPage(driver);
+        guiAction.clickOn(addItemButton);
+        return this;
     }
 
     public InventoryPage removeItemFormCart(String itemName) {
         var formattedItemName = itemName.replaceAll(" ", "-").toLowerCase();
         var removeItemButton = By.id(removeItemButtonId + formattedItemName);
-        guiActions.clickOn(removeItemButton);
-        return new InventoryPage(driver);
+        guiAction.clickOn(removeItemButton);
+        return this;
     }
 
-    public int getNumOfItemsOnCart() {
-        return Integer.parseInt(guiActions.getTextFrom(shoppingCartBadge));
+    public InventoryPage assertOnPageTitle(String expectedTitle) {
+        assertEquals(expectedTitle, guiAction.getTextFrom(pageTitle));
+        return this;
     }
 
-    public boolean isCartEmpty() {
-        return guiActions.ensureElementDoesNotExist(shoppingCartBadge);
+    public InventoryPage assertOnNumOfItemsOnCart(int expectedNumOfItems) {
+        assertEquals(expectedNumOfItems, Integer.parseInt(guiAction.getTextFrom(shoppingCartBadge)));
+        return this;
+    }
+
+    public InventoryPage assertThatCartIsEmpty() {
+        assertTrue(guiAction.ensureElementDoesNotExist(shoppingCartBadge));
+        return this;
     }
 }

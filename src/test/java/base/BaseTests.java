@@ -2,31 +2,29 @@ package base;
 
 import helpers.PropertiesReader;
 import helpers.WebDriverFactory;
+import org.junit.jupiter.api.*;
 import org.openqa.selenium.WebDriver;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class BaseTests {
     private WebDriver driver;
 
-    @BeforeClass
+    @BeforeAll
     public void majorSetUp() {
         driver = WebDriverFactory.getDriver();
     }
 
-    @BeforeMethod
+    @BeforeEach
     public void minorSetUp() {
         var url = new PropertiesReader("test-configurations")
                 .getProperty("base-url");
         driver.get(url);
     }
 
-    @AfterMethod
+    @AfterEach
     public void minorTearDown() {}
 
-    @AfterClass
+    @AfterAll
     public void majorTearDown() {
         WebDriverFactory.quit();
     }

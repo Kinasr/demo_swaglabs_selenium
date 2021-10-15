@@ -1,47 +1,43 @@
 package tests;
 
 import base.BaseTests;
-import helpers.ExcelReader;
-import helpers.PropertiesReader;
-import helpers.TestngListener;
-import org.testng.annotations.*;
+import helpers.Constant;
+import helpers.JsonReader;
+import org.junit.jupiter.api.*;
 import pages.LoginPage;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
-@Listeners(TestngListener.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class AddItemsTest extends BaseTests {
     private String username;
     private String password;
-    private String itemName;
-    private ExcelReader itemReader;
+    private List<Object> itemsList;
 
-    @BeforeClass
+    @BeforeAll
     public void localClassSetUp() {
-        PropertiesReader columnsHeaderReader = new PropertiesReader("columns-headers");
-        var userCredentials =
-                new ExcelReader("user-credentials", "valid credentials").getFirstRow();
-        username = userCredentials.get(columnsHeaderReader.getProperty("username")).toString();
-        password = userCredentials.get(columnsHeaderReader.getProperty("password")).toString();
-
-        itemName = columnsHeaderReader.getProperty("item");
+        var reader = new JsonReader(Constant.TEST_RESOURCES_PATH + "data/add_items_data");
+        username = reader.get("username").toString();
+        password = reader.get("password").toString();
+        itemsList = Arrays.stream(reader.get("items").toArray()).toList();
     }
 
     /**
      * Override the before class in the base to become before method.
      * Calling minorSetUp to open the site, and to ensure that we use the same driver instance.
      */
-    @BeforeMethod
+    @BeforeEach
     @Override
     public void majorSetUp() {
         super.majorSetUp();
         minorSetUp();
-        itemReader = new ExcelReader("items", "items");
     }
 
     /**
-     * Override the minorSetUp to delete it's annotation and with keeping it's main job.
+     * Override the minorSetUp to delete its annotation and with keeping its main job.
      */
     @Override
     public void minorSetUp() {
@@ -51,79 +47,89 @@ public class AddItemsTest extends BaseTests {
     /**
      * Override the after class in the base to become after method.
      */
-    @AfterMethod
+    @AfterEach
     @Override
     public void majorTearDown() {
         super.majorTearDown();
     }
 
     @Test
+    @DisplayName("Testing the adding item to the cart functionality")
     public void addItemToCart() {
-        var item = itemReader.getRandomRow().get(itemName).toString();
+        var item = getRandomItems(1);
 
-        var numOfItemsOnCart = new LoginPage(getDriver())
+        new LoginPage(getDriver())
                 .enterUserCredentials(username, password)
                 .login()
-                .addItemToCart(item)
-                .getNumOfItemsOnCart();
-        assertEquals(numOfItemsOnCart, 1);
+                .addItemToCart(item.get(0))
+                .assertOnNumOfItemsOnCart(1);
     }
 
     @Test
+    @DisplayName("Testing adding tow items to the cart at the same time")
     public void addTowItemsToCart() {
-        var item1 = itemReader.getRandomRow().get(itemName).toString();
-        var item2 = itemReader.getRandomRow().get(itemName).toString();
+        var items = getRandomItems(2);
 
-        var numOfItemsOnCart = new LoginPage(getDriver())
+        new LoginPage(getDriver())
                 .enterUserCredentials(username, password)
                 .login()
-                .addItemToCart(item1)
-                .addItemToCart(item2)
-                .getNumOfItemsOnCart();
-        assertEquals(numOfItemsOnCart, 2);
+                .addItemToCart(items.get(0))
+                .addItemToCart(items.get(1))
+                .assertOnNumOfItemsOnCart(2);
     }
 
     @Test
+    @DisplayName("Testing the removing item form the cart functionality")
     public void addOneItemToCartThenRemoveIt() {
-        var item = itemReader.getRandomRow().get(itemName).toString();
+        var item = getRandomItems(1);
 
-        var cartStatus = new LoginPage(getDriver())
+        new LoginPage(getDriver())
                 .enterUserCredentials(username, password)
                 .login()
-                .addItemToCart(item)
-                .removeItemFormCart(item)
-                .isCartEmpty();
-        assertTrue(cartStatus);
+                .addItemToCart(item.get(0))
+                .removeItemFormCart(item.get(0))
+                .assertThatCartIsEmpty();
     }
 
     @Test
+    @DisplayName("Testing that removing one item will not affect the other items in the cart")
     public void addTowItemsToCartThenRemoveOne() {
-        var item1 = itemReader.getRandomRow().get(itemName).toString();
-        var item2 = itemReader.getRandomRow().get(itemName).toString();
+        var items = getRandomItems(2);
 
-        var numOfItemsOnCart = new LoginPage(getDriver())
+        new LoginPage(getDriver())
                 .enterUserCredentials(username, password)
                 .login()
-                .addItemToCart(item1)
-                .addItemToCart(item2)
-                .removeItemFormCart(item1)
-                .getNumOfItemsOnCart();
-        assertEquals(numOfItemsOnCart, 1);
+                .addItemToCart(items.get(0))
+                .addItemToCart(items.get(1))
+                .removeItemFormCart(items.get(0))
+                .assertOnNumOfItemsOnCart(1);
     }
 
     @Test
+    @DisplayName("Testing that logout will not remove the items in the cart")
     public void addItemToCartThenLogoutAndLogin() {
-        var item = itemReader.getRandomRow().get(itemName).toString();
+        var item = getRandomItems(1);
 
-        var numOfItemsOnCart = new LoginPage(getDriver())
+        new LoginPage(getDriver())
                 .enterUserCredentials(username, password)
                 .login()
-                .addItemToCart(item)
+                .addItemToCart(item.get(0))
                 .openBurgerMenu()
                 .logout()
                 .enterUserCredentials(username, password)
                 .login()
-                .getNumOfItemsOnCart();
-        assertEquals(numOfItemsOnCart, 1);
+                .assertOnNumOfItemsOnCart(1);
+    }
+
+    private List<String> getRandomItems(int numOfItems) {
+        var list = new ArrayList<String>();
+
+        while (list.size() < numOfItems) {
+            var random = new Random();
+            var item = itemsList.get(random.nextInt(itemsList.size()));
+            if (!list.contains(item.toString()))
+                list.add(item.toString());
+        }
+        return list;
     }
 }

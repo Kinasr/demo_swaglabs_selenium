@@ -8,7 +8,7 @@ public class PropertiesReader {
     private final Properties prop;
 
     public PropertiesReader(String fileName) {
-        prop = PropertiesManager.loadPropertyFile(Constants.MAIN_RESOURCES_PATH + fileName);
+        prop = PropertiesManager.loadPropertyFile(Constant.MAIN_RESOURCES_PATH + fileName);
     }
 
     public String getProperty(String propName) {

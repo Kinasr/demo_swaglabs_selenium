@@ -1,16 +1,44 @@
 package data_providers;
 
-import helpers.ExcelReader;
-import org.testng.annotations.DataProvider;
+import helpers.Constant;
+import helpers.JsonReader;
+import org.junit.jupiter.params.provider.Arguments;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 public class DataProviders {
-    @DataProvider(name = "valid-user-credentials")
-    public static Object[][] gerValidUserCredentials() {
-        return new ExcelReader("user-credentials", "valid credentials").getData();
+
+    public static List<Arguments> gerValidUserCredentials() {
+        var reader = new JsonReader(Constant.TEST_RESOURCES_PATH +"data/login_data");
+        var jsonSourcePath = "valid-credentials";
+        var list = new  ArrayList<Arguments>();
+
+        for (var i = 0; i < reader.get(jsonSourcePath).toArray().length; i++) {
+            list.add(arguments(
+               reader.get(jsonSourcePath + "[" + i + "].username").toString(),
+               reader.get(jsonSourcePath + "[" + i + "].password").toString(),
+               reader.get(jsonSourcePath + "[" + i + "].next-page-title").toString()
+            ));
+        }
+        return list;
     }
 
-    @DataProvider(name = "invalid-user-credentials")
-    public static Object[][] geInValidUserCredentials() {
-        return new ExcelReader("user-credentials", "invalid credentials").getData();
+
+    public static List<Arguments> geInValidUserCredentials() {
+        var reader = new JsonReader(Constant.TEST_RESOURCES_PATH +"data/login_data");
+        var jsonSourcePath = "invalid-credentials";
+        var list = new  ArrayList<Arguments>();
+
+        for (var i = 0; i < reader.get(jsonSourcePath).toArray().length; i++) {
+            list.add(arguments(
+                    reader.get(jsonSourcePath + "[" + i + "].username").toString(),
+                    reader.get(jsonSourcePath + "[" + i + "].password").toString(),
+                    reader.get(jsonSourcePath + "[" + i + "].message").toString()
+            ));
+        }
+        return list;
     }
 }

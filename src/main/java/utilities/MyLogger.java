@@ -1,6 +1,7 @@
 package utilities;
 
-import org.testng.SkipException;
+
+import org.junit.jupiter.api.Assumptions;
 
 import java.io.IOException;
 import java.util.logging.FileHandler;
@@ -39,7 +40,7 @@ public class MyLogger {
      */
     public static void severe(String title, String msg) {
         logger.severe(title+ ": --> "+ msg);
-        throw new SkipException(msg);
+        Assumptions.assumeTrue(false);
     }
 
     /**

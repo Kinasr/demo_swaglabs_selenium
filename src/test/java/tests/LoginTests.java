@@ -1,34 +1,31 @@
 package tests;
 
-import helpers.TestngListener;
-import org.testng.annotations.Listeners;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import base.BaseTests;
 import pages.LoginPage;
 
-import static org.testng.Assert.assertEquals;
-
-@Listeners(TestngListener.class)
 public class LoginTests extends BaseTests{
 
-    @Test(dataProvider = "valid-user-credentials", dataProviderClass = data_providers.DataProviders.class)
-    public void testValidLogin(String username, String password) {
-        var pageTitle = new LoginPage(getDriver())
+    @ParameterizedTest(name = "{index} -> Login with username: {0} and password: {1}")
+    @DisplayName("Testing Login Functionality with Valid Credentials")
+    @MethodSource(value = "data_providers.DataProviders#gerValidUserCredentials")
+    public void testValidLogin(String username, String password, String nextPageTitle) {
+        new LoginPage(getDriver())
                 .enterUserCredentials(username, password)
                 .login()
-                .getPageTitle();
-        assertEquals(pageTitle, "PRODUCTS");
+                .assertOnPageTitle(nextPageTitle);
     }
 
-    @Test(dataProvider = "invalid-user-credentials", dataProviderClass = data_providers.DataProviders.class)
+    @ParameterizedTest(name = "{index} -> Login with username: {0} and password: {1}")
+    @DisplayName("Testing Login Functionality with Invalid Credentials")
+    @MethodSource(value = "data_providers.DataProviders#geInValidUserCredentials")
     public void testInvalidLogin(String username, String password, String message) {
         var loginPage = new LoginPage(getDriver());
         loginPage
                 .enterUserCredentials(username, password)
                 .login();
-        var errorMessage = loginPage
-                .getErrorMessage();
-
-        assertEquals(errorMessage, message);
+        loginPage.assertOnErrorMessage(message);
     }
 }

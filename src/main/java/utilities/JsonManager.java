@@ -45,6 +45,4 @@ public record JsonManager(String filePath) {
     public JSONArray getJsonArray() {
         return (JSONArray) loadJsonFile();
     }
-
-
 }

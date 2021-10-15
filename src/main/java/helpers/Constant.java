@@ -7,20 +7,20 @@ import java.util.Map;
  * A class contains the fixed constants and the loaded property files.
  * This class follow the Single Tone Pattern.
  */
-public class Constants {
+public class Constant {
     public static final String TEST_RESOURCES_PATH = "src/test/resources/";
     public static final String MAIN_RESOURCES_PATH = "src/main/resources/";
 
-    private static Constants instance = null;
+    private static Constant instance = null;
     private final Map<String, PropertiesReader> propReaders;
 
-    private Constants() {
+    private Constant() {
         propReaders = new HashMap<>();
     }
 
-    public static Constants getInstance() {
+    public static Constant getInstance() {
         if (instance == null)
-            instance = new Constants();
+            instance = new Constant();
 
         return instance;
     }

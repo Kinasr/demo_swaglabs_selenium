@@ -1,35 +1,28 @@
-package base;
+package test_steps;
 
 import helpers.PropertiesReader;
 import helpers.WebDriverFactory;
-import org.junit.jupiter.api.*;
+import io.cucumber.java.After;
+import io.cucumber.java.Before;
 import org.openqa.selenium.WebDriver;
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class BaseTests {
+public class StepsBase {
     private WebDriver driver;
 
-    @BeforeAll
-    public void majorSetUp() {
+    @Before
+    public void setUp() {
         driver = WebDriverFactory.getDriver();
-    }
-
-    @BeforeEach
-    public void minorSetUp() {
         var url = new PropertiesReader("test-configurations")
                 .getProperty("base-url");
         driver.get(url);
     }
 
-    @AfterEach
-    public void minorTearDown() {}
-
-    @AfterAll
-    public void majorTearDown() {
+    @After
+    public void tearDown() {
         WebDriverFactory.quit();
     }
 
-    public WebDriver getDriver() {
+    public WebDriver driver() {
         return driver;
     }
 }
